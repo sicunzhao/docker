@@ -1,0 +1,39 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:1.16.1
+    ports:
+      - 10001:80
+      - 10002:443
+    depends_on:
+      - phpfpm
+      - db
+      - redis
+    volumes:
+      - ./www/:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./log/nginx/:/var/log/nginx
+    restart: always
+  phpfpm:
+    image: php:7.3-fpm
+    ports:
+      - 10003:9000
+    volumes:
+      - ./www/:/var/www
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 10004:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+  redis:
+    image: redis:4.0.14
+    ports:
+      - 10005:6379
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
