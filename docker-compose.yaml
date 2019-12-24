@@ -6,7 +6,7 @@ services:
       - 10001:80
       - 10002:443
     depends_on:
-      - phpfpm
+      - php-fpm
       - db
       - redis
     volumes:
@@ -14,8 +14,9 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./log/nginx/:/var/log/nginx
     restart: always
-  phpfpm:
-    image: php:7.3-fpm
+  php-fpm:
+    build:
+      context: ./php-fpm/73
     ports:
       - 10003:9000
     volumes:
